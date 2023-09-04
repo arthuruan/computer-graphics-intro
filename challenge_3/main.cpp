@@ -12,8 +12,6 @@ using namespace std;
 
 GLint WINDOW_WIDTH = 500, WINDOW_HEIGHT = 500;
 
-int count = 0;
-
 struct point {
     GLint x;
     GLint y;
