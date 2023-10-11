@@ -1,21 +1,13 @@
+/**
+ * ARTHUR RUAN
+ * ELVIS ALMEIDA
+ * JORGE LUIZ
+*/
+
 #include <GL/glut.h>
 #include <string>
 #include <sstream>
 #include <cmath>
-
-/** 
-
-1 - check
-2 - check
-3 - check
-4 - check
-5 - check
-6 - check
-7 - check
-8 - 
-9 - check
-
-**/
 
 using namespace std;
 
@@ -48,7 +40,7 @@ struct IPlayer {
 
 // Jogadores
 IPlayer player1 = {
-    { -0.9, 0.0 },
+    { -0.98, 0.0 },
     {
         { 'w', 0, false },
         { 's', 0, false }
@@ -58,7 +50,7 @@ IPlayer player1 = {
 };
 
 IPlayer player2 = {
-    { 0.9, 0.0 },
+    { 0.98, 0.0 },
     {
         { ' ', GLUT_KEY_UP, false },
         { ' ', GLUT_KEY_DOWN, false }
@@ -139,15 +131,15 @@ void verifyWinner() {
 }
 
 void setBallPosition(IPlayer player, bool isLeft = true) {
-    ball.position.x = player.position.x  + (isLeft ? 0.022 : -0.022);
+    ball.position.x = player.position.x  + (isLeft ? 0.029 : -0.029);
     ball.position.y = player.position.y;
 }
 
 void update(int valor) {
     // Verifica se o jogo está pausado
-    if (paused) {
+    if (paused && (!player1.scored && !player2.scored)) {
         glutPostRedisplay();
-        glutTimerFunc(15, update, 0);
+        glutTimerFunc(16, update, 0);
         return;
     }
 
@@ -188,7 +180,7 @@ void update(int valor) {
     }
     if (player2.scored) {
         glutPostRedisplay();
-        glutTimerFunc(15, update, 0);
+        glutTimerFunc(16, update, 0);
         setBallPosition(player2, false);
         return;
     }
@@ -236,7 +228,7 @@ void update(int valor) {
     }
 
     glutPostRedisplay();
-    glutTimerFunc(15, update, 0);
+    glutTimerFunc(16, update, 0);
 }
 
 void drawScene() {
