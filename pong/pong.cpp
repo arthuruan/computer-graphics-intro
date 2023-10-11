@@ -17,6 +17,8 @@
 
 **/
 
+using namespace std;
+
 // Dimensões da janela
 int width = 800;
 int heigh = 600;
@@ -88,7 +90,7 @@ bool paused = false;
 bool endGame = false;
 int winnerScore = 15;
 
-void drawText(float x, float y, std::string texto) {
+void drawText(float x, float y, string texto) {
     glRasterPos2f(x, y);
     for (char c : texto) {
         glutBitmapCharacter(GLUT_BITMAP_9_BY_15, c);
@@ -116,9 +118,9 @@ void drawBall(float x, float y, float raio) {
     glEnd();
 }
 
-void drawEndGameText(std::string winner_string) {
-    std::string restart = "Restart [r]";
-    std::string end = "End [ESC]";
+void drawEndGameText(string winner_string) {
+    string restart = "Restart [r]";
+    string end = "End [ESC]";
     drawText(-0.022 * winner_string.length() / 2, 0.5, winner_string);
     drawText(-0.022 * restart.length() / 2, -0.5, restart);
     drawText(-0.022 * end.length() / 2, -0.6, end);
@@ -126,11 +128,11 @@ void drawEndGameText(std::string winner_string) {
 
 void verifyWinner() {
 	if (player1.score == winnerScore) {
-		std::string winner_string = "Left Player is the winner!";
+		string winner_string = "Left Player is the winner!";
         drawEndGameText(winner_string);
 		paused = true;
 	} else if (player2.score == winnerScore) {
-		std::string winner_string = "Right Player is the winner!";
+		string winner_string = "Right Player is the winner!";
         drawEndGameText(winner_string);
 		paused = true;
 	}
@@ -222,6 +224,7 @@ void update(int valor) {
         ball.speed.y = default_ball_speed;
     } else if (ball.position.x - ball.radius < -1.0) {
         player2.scored = true;
+        player2.score++;
         setBallPosition(player2, false);
         ball.speed.x = default_ball_speed;
         ball.speed.y = default_ball_speed;
@@ -250,14 +253,14 @@ void drawScene() {
 
     // Desenha o placar
     glColor3f(1.0, 1.0, 1.0);
-    drawText(-0.06, 0.85, std::to_string(player1.score) + " - " + std::to_string(player2.score));
+    drawText(-0.06, 0.85, to_string(player1.score) + " - " + to_string(player2.score));
 
     // Verifica se algum jogador marcou ponto
     verifyWinner();
 
     // Desenha pause
     if (paused) {
-        std::string pauseString = "PAUSED [SPACE]";
+        string pauseString = "PAUSED [SPACE]";
         glColor3f(1.0, 1.0, 1.0);
         drawText(-0.022 * pauseString.length() / 2, 0.2, pauseString);
     }
@@ -280,10 +283,7 @@ void handleKeyboardFunc(unsigned char key, int x, int y) {
         player2.scored = false;
         ball.speed.x = -default_ball_speed;
         ball.speed.y = -default_ball_speed;
-    }
-    
-    
-    else if (key == 27 && paused && (player1.score == winnerScore || player2.score == winnerScore)) {
+    } else if (key == 27 && paused && (player1.score == winnerScore || player2.score == winnerScore)) {
         printf("End Game\n");
         glutDestroyWindow(glutGetWindow());
         exit(0);
