@@ -8,8 +8,12 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include "miniaudio.h"
+#include "audio.h"
 
 using namespace std;
+
+Audio* audioPlayer = new Audio();
 
 // Dimensões da janela
 int width = 800;
@@ -174,7 +178,7 @@ void update(int valor) {
     // Verifica se algum jogador marcou ponto
     if (player1.scored) {
         glutPostRedisplay();
-        glutTimerFunc(15, update, 0);
+        glutTimerFunc(16, update, 0);
         setBallPosition(player1);
         return;
     }
@@ -191,10 +195,11 @@ void update(int valor) {
     ball.position.y += ball.speed.y;
 
     // Verifica colisões da bola com os jogadores
-    if (ball.position.x - ball.radius < player1.position.x + 0.01 &&
+    if (ball.position.x - ball.radius < player1.position.x &&
         ball.position.x + ball.radius > player1.position.x - 0.01 &&
         ball.position.y - ball.radius < player1.position.y + 0.1 &&
         ball.position.y + ball.radius > player1.position.y - 0.1) {
+        audioPlayer->hit();
         ball.speed.x = -ball.speed.x;
         ball.speed.x += (ball.speed.x > 0) ? speed_increment : -speed_increment;
     }
@@ -203,18 +208,21 @@ void update(int valor) {
         ball.position.x + ball.radius > player2.position.x - 0.01 &&
         ball.position.y - ball.radius < player2.position.y + 0.1 &&
         ball.position.y + ball.radius > player2.position.y - 0.1) {
+        audioPlayer->hit();
         ball.speed.x = -ball.speed.x;
         ball.speed.x += (ball.speed.x > 0) ? speed_increment : -speed_increment;
     }
 
     // Verifica colisões da bola com as paredes
     if (ball.position.x + ball.radius > 1.0) {
+        audioPlayer->goal();
         player1.scored = true;
         player1.score++;
         setBallPosition(player1);
         ball.speed.x = default_ball_speed;
         ball.speed.y = default_ball_speed;
     } else if (ball.position.x - ball.radius < -1.0) {
+        audioPlayer->goal();
         player2.scored = true;
         player2.score++;
         setBallPosition(player2, false);
